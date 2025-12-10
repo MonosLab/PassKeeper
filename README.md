@@ -2,7 +2,7 @@
 
 ## Features
 
-* A program for managing passwords.
+A Windows application for managing passwords.
 
 ### Installation
 
