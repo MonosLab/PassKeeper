@@ -1,0 +1,182 @@
+body {
+    font-family: 'Malgun Gothic', 'Segoe UI', sans-serif;
+    background: #f9fafb;
+    margin: 0;
+    padding: 20px;
+}
+
+h2 {
+    text-align: center;
+    color: #333;
+}
+
+/* button style */
+/* Position addBtn 10% from the right, avoiding overlap with the table below */
+#addBtn {
+    display: block;
+    margin: 0 auto;
+    padding: 6px 20px;
+    background: #4f46e5;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background 0.3s;
+}
+#addBtn:hover {
+    background: #4338ca;
+}
+
+/* table style */
+table {
+    width: 90%;
+    margin: 2px auto;
+    border-collapse: collapse;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    background: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+}
+th {
+    padding: 12px;
+    text-align: center;
+    background: #d3d3d3;
+    font-weight: bold;
+    color: #5e5e5e;
+}
+td {
+    padding: 0px 8px 4px 8px;  /* top, right, bottom, left */
+    text-align: center;
+    border-bottom: 1px dotted #dddddd;
+}
+/* All rows' third cell */
+td:nth-child(3) {
+  background-color: #FFF;
+  color: #FFF;
+  font-weight: normal;
+}
+/* All rows' fourth cell */
+td:nth-child(4) {
+  width: 180px;
+}
+tr:hover {
+    background: #ffffee;
+}
+tr:hover td:nth-child(3) {
+  background-color: #ffffee;
+  color: #ffffee;
+}
+/* Notification message style */
+.notify-message {
+  width: 90%;
+  margin: 0 auto;
+  text-align: right;
+  color: #5c6370;
+  font-family: 'Malgun Gothic', 'Segoe UI', sans-serif;
+  font-size: 13px;
+  margin-top: 10px;
+  margin-bottom: 0px;
+}
+/* Action buttons */
+.action-btn {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 13px;
+    margin: 0 2px;
+    transition: 0.3s;
+}
+.edit-btn {
+    background: #10b981;
+    color: #fff;
+}
+.edit-btn:hover {
+    background: #059669;
+}
+.delete-btn {
+    background: #ef4444;
+    color: #fff;
+}
+.delete-btn:hover {
+    background: #dc2626;
+}
+.view-btn {
+    font-size: 20px;
+    background: transparent;
+    color: #000;
+}
+/* Modal styles */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.4);
+    justify-content: center; align-items: center;
+    animation: fadeIn 0.3s;
+}
+.modal-content {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    width: 320px;
+    box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+    animation: slideUp 0.3s;
+}
+.modal-header {
+    font-weight: bold;
+    margin-bottom: 15px;
+    font-size: 18px;
+    color: #4f46e5;
+}
+.modal-footer {
+    text-align: right;
+    margin-top: 15px;
+}
+.modal-footer button {
+    padding: 8px 14px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    margin-left: 6px;
+}
+#confirmBtn {
+    background: #4f46e5;
+    color: #fff;
+}
+#confirmBtn:hover {
+    background: #4338ca;
+}
+#cancelBtn {
+    background: #9ca3af;
+    color: #fff;
+}
+#cancelBtn:hover {
+    background: #6b7280;
+}
+
+/* Input field styles */
+input[type="text"], input[type="password"] {
+    width: 300px;
+    padding: 8px;
+    margin: 6px auto;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+}
+input[type="text"]:focus, input[type="password"]:focus {
+    border-color: #4f46e5;
+    outline: none;
+    box-shadow: 0 0 4px rgba(79,70,229,0.3);
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {opacity: 0;} to {opacity: 1;}
+}
+@keyframes slideUp {
+    from {transform: translateY(30px); opacity: 0;}
+    to {transform: translateY(0); opacity: 1;}
+}

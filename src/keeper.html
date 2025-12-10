@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="keeper.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>비밀번호 관리</title>
+    <!--script type="module" src="main.js" defer></script-->
+  </head>
+  <body>
+    <h2>🔐 계정 관리</h2>
+    <button id="addBtn">＋ 계정 추가</button>
+    <div class="notify-message">( 비밀번호 부분을 드래그하거나 자물쇠를 클릭하면 비밀번호가 보입니다. )</div>
+    <table id="accountTable">
+      <thead>
+        <tr>
+          <th>서비스명</th>
+          <th>계정</th>
+          <th>비밀번호</th>
+          <th>관리</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+    <!-- 모달 -->
+    <div id="modal" class="modal" autocomplete="off">
+      <div class="modal-content">
+        <div class="modal-header">계정 정보 입력</div>
+        <label>서비스명</label>
+        <input type="text" id="service">
+        <label>계정</label>
+        <input type="text" id="account">
+        <label>비밀번호</label>
+        <input type="text" id="password">
+        <div class="modal-footer">
+          <button id="cancelBtn">취소</button>
+          <button id="confirmBtn" hidden>확인</button>
+          <button id="modifyBtn" hidden>수정</button>
+        </div>
+      </div>
+    </div>
+    <!--script type="module" src="https://unpkg.com/@tauri-apps/api@2/dist/index.min.js"></script-->
+    <script src="main.js" defer></script>
+    <script>
+      const modal = document.getElementById("modal");
+      const addBtn = document.getElementById("addBtn");
+      const confirmBtn = document.getElementById("confirmBtn");
+      const modifyBtn = document.getElementById("modifyBtn");
+      const cancelBtn = document.getElementById("cancelBtn");
+      const tableBody = document.querySelector("#accountTable tbody");
+
+      let editRow = null;
+      let pwdDisplayMap = {};   // Object to manage password display state for each row
+      
+      addBtn.onclick = () => {
+        editRow = null;
+        document.getElementById("service").value = "";
+        document.getElementById("account").value = "";
+        document.getElementById("password").value = "";
+        document.getElementById("service").disabled = false;
+        document.getElementById("account").disabled = false;
+        document.getElementById("password").disabled = false;
+        confirmBtn.hidden = false;
+        modifyBtn.hidden = true;
+        modal.style.display = "flex";
+      };
+      cancelBtn.onclick = () => modal.style.display = "none";
+      confirmBtn.onclick = async () => {
+        const service = document.getElementById("service").value;
+        const account = document.getElementById("account").value;
+        const password = document.getElementById("password").value;
+        // Send the data to the backend
+        // Assuming currentUser is set after login
+        // You might need to adjust how currentUser is managed
+        if (await saveData(get_current_user(), service, account, password) == true) {
+          if (editRow) {
+            editRow.cells[0].innerText = service;
+            editRow.cells[1].innerText = account;
+            editRow.cells[2].innerText = password;
+          } else {
+            const row = tableBody.insertRow();
+            row.insertCell(0).innerText = service;
+            row.insertCell(1).innerText = account;
+            row.insertCell(2).innerText = password;
+            const manageCell = row.insertCell(3);
+            const editBtn = document.createElement("button");
+            editBtn.innerText = "수정";
+            editBtn.className = "action-btn edit-btn";
+            editBtn.onclick = async () => {
+              editRow = row;
+              document.getElementById("service").value = row.cells[0].innerText;
+              document.getElementById("account").value = row.cells[1].innerText;
+              document.getElementById("password").value = row.cells[2].innerText;
+              document.getElementById("service").disabled = true;
+              document.getElementById("account").disabled = true;
+              document.getElementById("password").disabled = false;
+              confirmBtn.hidden = true;
+              modifyBtn.hidden = false;
+              modal.style.display = "flex";
+            };
+            const deleteBtn = document.createElement("button");
+            deleteBtn.innerText = "삭제";
+            deleteBtn.className = "action-btn delete-btn";
+            deleteBtn.onclick = async () => {
+              if (await removeData(get_current_user(), row.cells[0].innerText) == true) {
+                // Remove row from table
+                tableBody.removeChild(row);
+              }
+            }
+            const pwdViewBtn = document.createElement("button");
+            pwdViewBtn.innerText = "🔓";
+            pwdViewBtn.className = "action-btn view-btn";
+            pwdDisplayMap[row.rowIndex] = false; // Hide password initially
+            pwdViewBtn.onclick = () => {
+              const pwdCell = row.cells[2];
+              pwdDisplayMap[row.rowIndex] = !pwdDisplayMap[row.rowIndex];
+              if (pwdDisplayMap[row.rowIndex]) {
+                pwdCell.style.color = "#000";
+                pwdViewBtn.innerText = "🔒";
+              } else {
+                pwdCell.style.color = "transparent";
+                pwdViewBtn.innerText = "🔓";
+              }
+            };
+            manageCell.appendChild(pwdViewBtn);
+            manageCell.appendChild(editBtn);
+            manageCell.appendChild(deleteBtn);
+          }
+          modal.style.display = "none";
+        } else {
+          alert("데이터 저장에 실패했습니다. 동일한 서비스명과 계정이 있는지 확인하세요.");
+        }
+      };
+      modifyBtn.onclick = async () => {
+        const service = document.getElementById("service").value;
+        const account = document.getElementById("account").value;
+        const password = document.getElementById("password").value;
+        // Send the data to the backend
+        // Assuming currentUser is set after login
+        // You might need to adjust how currentUser is managed
+        if (await modifyData(get_current_user(), service, account, password) == true) {
+          editRow.cells[0].innerText = service;
+          editRow.cells[1].innerText = account;
+          editRow.cells[2].innerText = password;
+          modal.style.display = "none";
+        } else {
+          alert("데이터 수정에 실패했습니다. 동일한 서비스명과 계정이 있는지 확인하세요.");
+        }
+      };
+      window.addEventListener("DOMContentLoaded", async () => {
+        // Load existing data and populate the table
+        await getData(get_current_user()).then(data => {
+          console.log(data);
+          // Clear existing rows
+          tableBody.innerHTML = "";
+          JSON.parse(data).forEach(entry => {
+            const row = tableBody.insertRow();
+            row.insertCell(0).innerText = entry.service;
+            row.insertCell(1).innerText = entry.account;
+            row.insertCell(2).innerText = entry.password;
+            const manageCell = row.insertCell(3);
+            const editBtn = document.createElement("button");
+            editBtn.innerText = "수정";
+            editBtn.className = "action-btn edit-btn";
+            editBtn.onclick = async () => {
+              editRow = row;
+              document.getElementById("service").value = row.cells[0].innerText;
+              document.getElementById("account").value = row.cells[1].innerText;
+              document.getElementById("password").value = row.cells[2].innerText;
+              // properties set to disable service and account fields during edit
+              document.getElementById("service").disabled = true;
+              document.getElementById("account").disabled = true;
+              document.getElementById("password").disabled = false;
+              confirmBtn.hidden = true;
+              modifyBtn.hidden = false;
+              modal.style.display = "flex";
+            };
+            const deleteBtn = document.createElement("button");
+            deleteBtn.innerText = "삭제";
+            deleteBtn.className = "action-btn delete-btn";
+            deleteBtn.onclick = async () => {
+              if (await removeData(get_current_user(), row.cells[0].innerText) == true) {
+                // Remove row from table
+                tableBody.removeChild(row);
+              }
+            }
+            const pwdViewBtn = document.createElement("button");
+            pwdViewBtn.innerText = "🔓";
+            pwdViewBtn.className = "action-btn view-btn";
+            pwdDisplayMap[row.rowIndex] = false; // Hide password initially
+            pwdViewBtn.onclick = () => {
+              const pwdCell = row.cells[2];
+              pwdDisplayMap[row.rowIndex] = !pwdDisplayMap[row.rowIndex];
+              if (pwdDisplayMap[row.rowIndex]) {
+                pwdCell.style.color = "#000";
+                pwdViewBtn.innerText = "🔒";
+              } else {
+                pwdCell.style.color = "transparent";
+                pwdViewBtn.innerText = "🔓";
+              }
+            };
+            manageCell.appendChild(pwdViewBtn);
+            manageCell.appendChild(editBtn);
+            manageCell.appendChild(deleteBtn);
+          });
+        });
+      });
+    </script>
+  </body>
+</html>

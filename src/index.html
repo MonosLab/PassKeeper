@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="login.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PassKeeper</title>
+    <!--script type="module" src="main.js" defer></script-->
+  </head>
+  <body>
+    <div class="login-box">
+      <h2>🔐 로그인</h2>
+      <form id="loginForm" autocomplete="off">
+        <input type="text" id="username" placeholder="아이디" required>
+        <input type="password" id="password" placeholder="비밀번호" required>
+        <button type="submit">로그인</button>
+        <div id="errorMsg" class="error"></div>
+      </form>
+      <span class="create-link" id="showCreateAccount">계정 생성</span>
+    </div>
+    <!-- 계정 생성 모달(레이어) -->
+    <div class="modal-backdrop" id="modalBackdrop">
+      <div class="modal-content">
+        <h3>계정 생성</h3>
+        <form id="createForm" autocomplete="off">
+          <input type="text" id="newUsername" class="modal-input" placeholder="아이디" required>
+          <input type="password" id="newPassword" class="modal-input" placeholder="비밀번호" required>
+          <input type="password" id="confirmPassword" class="modal-input" placeholder="비밀번호 확인" required>
+          <div class="modal-error" id="createErrorMsg"></div>
+          <div class="modal-btn-row">
+            <button type="submit">저장</button>
+            <button type="button" id="cancelCreateBtn" style="background:#e5e7eb;color:#222;">취소</button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <!--script type="module" src="https://unpkg.com/@tauri-apps/api@2/dist/index.min.js"></script-->
+    <script src="main.js" defer></script>
+    <script>
+      const loginForm = document.getElementById("loginForm");
+      const errorMsg = document.getElementById("errorMsg");
+
+      loginForm.onsubmit = (e) => {
+        e.preventDefault();
+        const username = document.getElementById("username").value;
+        const password = document.getElementById("password").value;
+        login(username, password).then(isValid => {
+          if (isValid) {
+            errorMsg.innerText = "";
+            window.location.href = "keeper.html";
+          } else {
+            errorMsg.innerText = "아이디 또는 비밀번호가 올바르지 않습니다.";
+          }
+        });
+      };
+      
+      // 계정 생성 레이어 관련
+      const showCreateBtn = document.getElementById("showCreateAccount");
+      const modalBackdrop = document.getElementById("modalBackdrop");
+      const cancelCreateBtn = document.getElementById("cancelCreateBtn");
+      const createForm = document.getElementById("createForm");
+      const createErrorMsg = document.getElementById("createErrorMsg");
+
+      // 모달 열기
+      showCreateBtn.onclick = () => {
+        createForm.reset();
+        createErrorMsg.innerText = "";
+        modalBackdrop.classList.add("active");
+        document.getElementById("newUsername").focus();
+      };
+      // 모달 닫기 함수
+      function closeCreateLayer() {
+        modalBackdrop.classList.remove("active");
+        createErrorMsg.innerText = "";
+      }
+      cancelCreateBtn.onclick = closeCreateLayer;
+      // backdrop 클릭 시 닫기
+      modalBackdrop.onclick = (e) => {
+        if (e.target === modalBackdrop) closeCreateLayer();
+      };
+
+      // 계정생성 유효성/처리
+      createForm.onsubmit = (e) => {
+        e.preventDefault();
+        const id = document.getElementById("newUsername").value.trim();
+        const pw = document.getElementById("newPassword").value;
+        const pw2 = document.getElementById("confirmPassword").value;
+        if (!id) {
+          createErrorMsg.innerText = "아이디를 입력하세요.";
+          return;
+        }
+        if (!pw) {
+          createErrorMsg.innerText = "비밀번호를 입력하세요.";
+          return;
+        }
+        if (pw !== pw2) {
+          createErrorMsg.innerText = "비밀번호가 일치하지 않습니다.";
+          return;
+        }
+        
+        createAccount(id, pw).then(() => {
+          createErrorMsg.innerText = "계정이 생성되었습니다!";
+          setTimeout(() => {
+            closeCreateLayer();
+          }, 1000);
+        });
+      };
+    </script>
+  </body>
+</html>
