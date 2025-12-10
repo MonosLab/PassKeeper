@@ -130,7 +130,7 @@ async function loadPasswords() {
     renderPasswords(passwords);
   } catch (error) {
     console.error("Error loading passwords:", error);
-    alert("Error loading passwords: " + error);
+    alert("Failed to load passwords. Please ensure the application is unlocked and try again. Error: " + error);
   }
 }
 
@@ -205,8 +205,9 @@ async function viewPassword(id) {
       return;
     }
 
-    alert(`Password: ${password.password}\n\nClick OK to copy to clipboard.`);
+    // Copy to clipboard without displaying in alert for better security
     await navigator.clipboard.writeText(password.password);
+    alert("Password copied to clipboard!");
   } catch (error) {
     alert("Error viewing password: " + error);
   }

@@ -86,7 +86,7 @@ fn search_passwords(query: String, state: State<AppState>) -> Result<Vec<Passwor
 
 #[tauri::command]
 fn generate_password(length: usize, use_symbols: bool, use_numbers: bool, use_uppercase: bool) -> Result<String, String> {
-    Ok(crypto::generate_password(length, use_symbols, use_numbers, use_uppercase))
+    crypto::generate_password(length, use_symbols, use_numbers, use_uppercase)
 }
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]

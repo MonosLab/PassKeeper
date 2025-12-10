@@ -73,6 +73,8 @@ npm run build
 - Data is stored locally in your system's data directory
 - No network requests are made; all data stays on your device
 
+**Important Security Note**: The current implementation uses a simplified key derivation method for demonstration purposes. For production use, the key derivation should be upgraded to use PBKDF2 (with 100,000+ iterations) or Argon2id with proper salt generation to protect against dictionary attacks.
+
 ## Data Location
 
 PassKeeper stores encrypted data in your system's data directory:
