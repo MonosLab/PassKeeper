@@ -28,6 +28,13 @@ You need to install the required modules once using 'pnpm install' in the projec
 
 * Initial version
 
+# Screen
+
+* Login Screen:
+<img src="doc/login.png" width="400" height="300">
+* Main Screen:
+<img src="doc/main_view.png" width="400" height="300">
+
 # Key Development Notes
 
 ## crypto   
