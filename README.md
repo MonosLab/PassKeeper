@@ -11,9 +11,9 @@ You need to install the required modules once using 'pnpm install' in the projec
 ### Distribution Folder Structure   
 
 📂root   
-├─ 📂 data   
-│    └─📄user.dat   
-└─📄passkeeper.exe  
+├─📂data   
+│   └─📄user.dat   
+└─📄passkeeper.exe   
 
 ## Development Tool Versions
 
@@ -30,12 +30,15 @@ You need to install the required modules once using 'pnpm install' in the projec
 
 # Key Development Notes
 
-## tauri.conf.json
+## crypto   
+* It is necessary to redefine the encrypt_data, decrypt_data, and hash_data functions.   
+> The encryption and hash parts must be added and developed individually. (By default, data is stored without encryption)   
+ (* Location: src-tauri > src > module > crypto.rs )   
 
-* tauri.conf.json : References a locally saved schema file. (src-tauri/schema/config.schema.json)
-* If issues occur after updating Tauri version with local reference, download and use the file from https://github.com/tauri-apps/tauri/blob/dev/crates/tauri-schema-generator/schemas/config.schema.json
+## tauri.conf.json   
+* tauri.conf.json : References a locally saved schema file. (src-tauri/schema/config.schema.json)   
+* If issues occur after updating Tauri version with local reference, download and use the file from    https://github.com/tauri-apps/tauri/blob/dev/crates/tauri-schema-generator/schemas/config.schema.json   
 
-## Uncaught TypeError: Cannot read properties of undefined (reading 'core')
-
-* Occurrence location : const { invoke } = window.**TAURI**.core;
-* If this error occurs at the above location in devtools, you need to rebuild once more according to the comments in build.rs.
+## Uncaught TypeError: Cannot read properties of undefined (reading 'core')   
+* Occurrence location : const { invoke } = window.**TAURI**.core;   
+* If this error occurs at the above location in devtools, you need to rebuild once more according to the comments in build.rs.   

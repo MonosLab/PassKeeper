@@ -25,6 +25,11 @@
 
 # 개발 주요 사항
 
+## crypto
+* encrypt_data, decrypt_data, hash_data 함수를 재정의 필요.   
+> 암호화와 Hash 부분은 개인적으로 추가하여 개발하여야 함. (기본은 암호화 되지 않은 상태로 저장이 됨)   
+ (* 위치 : src-tauri > src > module > crypto.rs )   
+
 ## tauri.conf.json
 * tauri.conf.json : 스키마 파일을 로컬에 저장하여 참조함. (src-tauri/schema/config.schema.json)
 * 로컬 참조시 타우리 버전 업데이트 후 문제가 발생되면, https://github.com/tauri-apps/tauri/blob/dev/crates/tauri-schema-generator/schemas/config.schema.json 의 파일을 다운받아 사용 해야함.
