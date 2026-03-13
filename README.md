@@ -12,7 +12,7 @@ You need to install the required modules once using 'pnpm install' in the projec
 
 📂root   
 ├─📂data   
-│   └─📄user.dat   
+│  └─📄user.dat   
 └─📄passkeeper.exe   
 
 ## Development Tool Versions
