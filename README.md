@@ -4,11 +4,11 @@
 
 A Windows application for managing passwords.
 
-### Installation
+## Installation
 
 You need to install the required modules once using 'pnpm install' in the project's root directory.
 
-### Distribution Folder Structure   
+## Distribution Folder Structure   
 
 📂root   
 ├─📂data   
@@ -17,10 +17,10 @@ You need to install the required modules once using 'pnpm install' in the projec
 
 ## Development Tool Versions
 
-* RUST Version : v.1.90.0 (1159e78c4 2025-09-14)
-* TAURI Version : v.2.9.3
-* TAURI-CLI Version : v.2.9.5
-* VITE Version : v.7.2.4
+* RUST Version : v.1.96.0 (ac68faa20 2026-05-25)
+* TAURI Version : v.2.11.5
+* TAURI-API Version : v.2.11.1
+* TAURI-CLI Version : v.2.11.4
 
 ## Version Information
 
@@ -28,24 +28,25 @@ You need to install the required modules once using 'pnpm install' in the projec
 
 * Initial version
 
-# Screen
+## Screen
 
 * Login Screen:
 <img src="doc/login.png" width="400" height="300">
 * Main Screen:
 <img src="doc/main_view.png" width="400" height="300">
 
-# Key Development Notes
+## Key Development Notes
 
-## crypto   
+### crypto   
 * It is necessary to redefine the encrypt_data, decrypt_data, and hash_data functions.   
 > The encryption and hash parts must be added and developed individually. (By default, data is stored without encryption)   
  (* Location: src-tauri > src > module > crypto.rs )   
 
-## tauri.conf.json   
-* tauri.conf.json : References a locally saved schema file. (src-tauri/schema/config.schema.json)   
-* If issues occur after updating Tauri version with local reference, download and use the file from    https://github.com/tauri-apps/tauri/blob/dev/crates/tauri-schema-generator/schemas/config.schema.json   
+### Bundle.js Bundling  
 
-## Uncaught TypeError: Cannot read properties of undefined (reading 'core')   
-* Occurrence location : const { invoke } = window.**TAURI**.core;   
-* If this error occurs at the above location in devtools, you need to rebuild once more according to the comments in build.rs.   
+Bundling is required. Refer to the comments at the beginning of bundle.js for guidance.
+
+### tauri.conf.json
+
+* tauri.conf.json : References a locally saved schema file. (src-tauri/schema/config.schema.json)
+* If issues occur after updating Tauri version with local reference, download and use the file from [config.schema.json](https://github.com/tauri-apps/tauri/blob/dev/crates/tauri-schema-generator/schemas/config.schema.json)  

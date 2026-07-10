@@ -1,17 +1,6 @@
 // When using the Tauri API npm package:
-//import { invoke } from '@tauri-apps/api/core';
-
-// When using the Tauri global script (if not using the npm package)
-// Be sure to set `app.withGlobalTauri` in `tauri.conf.json` to true
-const { invoke } = window.__TAURI__.core;
-
-// Utility function to get invoke function safely
-//function getInvoke() {
-//  if (window.__TAURI__ && window.__TAURI__.core && window.__TAURI__.core.invoke) {
-//    return window.__TAURI__.core.invoke;
-//  }
-//  throw new Error('Tauri API not available. Make sure Tauri script is loaded.');
-//}
+// Define invoke in bundle.js as shown below
+// window.tauriInvoke
 
 function setCurrentUser(user) {
   sessionStorage.setItem("currentUser", JSON.stringify(user));
@@ -23,8 +12,7 @@ function getCurrentUser() {
 }
 
 async function createAccount(username, password) {
-//  const invoke = getInvoke();
-  const resultCode = await invoke("save_account", { username, password });
+  const resultCode = await window.tauriInvoke("save_account", { username, password });
   let message = "";
   switch (resultCode) {
     case 0:
@@ -44,8 +32,7 @@ async function createAccount(username, password) {
 }
 
 async function login(username, password) {
-//  const invoke = getInvoke();
-  const isValid = await invoke("validate_login", { username, password });
+  const isValid = await window.tauriInvoke("validate_login", { username, password });
   if (isValid === true) {
     setCurrentUser(username);
     console.log("Login: ", username, " logged in.");
@@ -59,14 +46,12 @@ async function login(username, password) {
 }
 
 async function getData(username) {
-//  const invoke = getInvoke();
-  const data = await invoke("get_data", { username });
+  const data = await window.tauriInvoke("get_data", { username });
   return data;
 }
 
 async function saveData(username, service, account, password) {
-//  const invoke = getInvoke();
-  const resultCode = await invoke("save_data", { username, service, account, password });
+  const resultCode = await window.tauriInvoke("save_data", { username, service, account, password });
   let message = "";
   switch (resultCode) {
     case 0:
@@ -99,8 +84,7 @@ async function saveData(username, service, account, password) {
 }
 
 async function removeData(username, service) {
-//  const invoke = getInvoke();
-  const resultCode = await invoke("remove_data", { username, service });
+  const resultCode = await window.tauriInvoke("remove_data", { username, service });
   let message = "";
   switch (resultCode) {
     case 0:
@@ -124,8 +108,7 @@ async function removeData(username, service) {
 }
 
 async function modifyData(username, service, account, password) {
-//  const invoke = getInvoke();
-  const resultCode = await invoke("modify_data", { username, service, account, password });
+  const resultCode = await window.tauriInvoke("modify_data", { username, service, account, password });
   let message = "";
   switch (resultCode) {
     case 0:
@@ -147,6 +130,12 @@ async function modifyData(username, service, account, password) {
       return false;
 }
 
-function get_current_user() {
-  return getCurrentUser();
-}
+// Expose globally
+window.login = login;
+window.getData = getData;
+window.saveData = saveData;
+window.removeData = removeData;
+window.modifyData = modifyData;
+window.createAccount = createAccount;
+window.setCurrentUser = setCurrentUser;
+window.getCurrentUser = getCurrentUser;

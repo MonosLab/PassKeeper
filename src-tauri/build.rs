@@ -11,6 +11,7 @@ const BUILD_RES: bool = true;
 
 #[cfg(windows)]
 fn main() {
+    println!("cargo::rustc-check-cfg=cfg(mobile)");
     if BUILD_RES {
         let mut res = tauri_winres::WindowsResource::new();
         res.set_icon("icons/icon.ico");

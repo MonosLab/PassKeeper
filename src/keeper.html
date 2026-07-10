@@ -5,6 +5,7 @@
     <link rel="stylesheet" href="keeper.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>비밀번호 관리</title>
+    <script type="module" src="./tauri-api.js"></script>
     <!--script type="module" src="main.js" defer></script-->
   </head>
   <body>
@@ -72,7 +73,7 @@
         // Send the data to the backend
         // Assuming currentUser is set after login
         // You might need to adjust how currentUser is managed
-        if (await saveData(get_current_user(), service, account, password) == true) {
+        if (await saveData(getCurrentUser(), service, account, password) == true) {
           if (editRow) {
             editRow.cells[0].innerText = service;
             editRow.cells[1].innerText = account;
@@ -102,7 +103,7 @@
             deleteBtn.innerText = "삭제";
             deleteBtn.className = "action-btn delete-btn";
             deleteBtn.onclick = async () => {
-              if (await removeData(get_current_user(), row.cells[0].innerText) == true) {
+              if (await removeData(getCurrentUser(), row.cells[0].innerText) == true) {
                 // Remove row from table
                 tableBody.removeChild(row);
               }
@@ -138,7 +139,7 @@
         // Send the data to the backend
         // Assuming currentUser is set after login
         // You might need to adjust how currentUser is managed
-        if (await modifyData(get_current_user(), service, account, password) == true) {
+        if (await modifyData(getCurrentUser(), service, account, password) == true) {
           editRow.cells[0].innerText = service;
           editRow.cells[1].innerText = account;
           editRow.cells[2].innerText = password;
@@ -149,7 +150,7 @@
       };
       window.addEventListener("DOMContentLoaded", async () => {
         // Load existing data and populate the table
-        await getData(get_current_user()).then(data => {
+        await getData(getCurrentUser()).then(data => {
           console.log(data);
           // Clear existing rows
           tableBody.innerHTML = "";
@@ -179,7 +180,7 @@
             deleteBtn.innerText = "삭제";
             deleteBtn.className = "action-btn delete-btn";
             deleteBtn.onclick = async () => {
-              if (await removeData(get_current_user(), row.cells[0].innerText) == true) {
+              if (await removeData(getCurrentUser(), row.cells[0].innerText) == true) {
                 // Remove row from table
                 tableBody.removeChild(row);
               }

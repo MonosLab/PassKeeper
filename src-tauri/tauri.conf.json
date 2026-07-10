@@ -1,5 +1,5 @@
 {
-  "$schema": "https://schema.tauri.app/config/2",
+  "$schema": "schema/config.schema.json",
   "productName": "passkeeper",
   "version": "0.1.0",
   "identifier": "monoslab.passkeeper.app",
